@@ -1,12 +1,14 @@
 /*
  * Quadcopter Code for Engr7B Winter Quarter 2019
  * Team Name: X-traa
+ * Last edited: 2/13/2019
+ * 
  */
 
 //Import Statements
 #include <Servo.h>
 #include <SPI.h>  
-#include "TPixy2.h"
+#include <Pixy2.h>
 
 //Variables
   //Constants
@@ -14,9 +16,11 @@
   const int echoPin = 10;
   const int ultraRangeFar = 150;
   const int ultraRangeNear = 130;
-
+  int sigRed = 1; //signature one for the pixy will be red
+  int sigBlue = 2; //signature two for the pixy will be blue
+  
   //Non-Constants
-  TPixy2 pixy();
+  Pixy2 pixy;
   Servo servoRed;
   Servo servoBlue;
   int posRed = 0;
@@ -24,6 +28,7 @@
   int distanceUltra = 1000;
   long duration;
   bool isRed = false;
+  
   
 void UltraDetect(){
   //Use Ultrasonic Sensor to modify distanceUltra
@@ -49,6 +54,10 @@ void UltraDetect(){
 
 void PixyDetect(){
   //Use Pixy Camera to determine color and change isRed to true or false
+  int i =0;
+  pixy.ccc.getBlocks();
+
+  
 }
 
 void Open(){
