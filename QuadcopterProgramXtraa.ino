@@ -3,41 +3,96 @@
  * Team Name: X-traa
  */
 
-//Imports
+//Import Statements
 #include <Servo.h>
 #include <SPI.h>  
 #include "TPixy2.h"
 
 //Variables
   //Constants
-const int trigPin = 9;
-const int echoPin = 10;
+  const int trigPin = 9;
+  const int echoPin = 10;
+  const int ultraRangeFar = 150;
+  const int ultraRangeNear = 130;
 
   //Non-Constants
-TPixy2 pixy();
-Servo servoRed;
-Servo servoBlue;
-int posRed = 0;
-int posBlue = 0;
-int distanceUltra = 1000
-
+  TPixy2 pixy();
+  Servo servoRed;
+  Servo servoBlue;
+  int posRed = 0;
+  int posBlue = 0;
+  int distanceUltra = 1000;
+  long duration;
+  bool isRed = false;
+  
 void UltraDetect(){
   //Use Ultrasonic Sensor to modify distanceUltra
+  // Clears the trigPin
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  
+  //Sets the trigPin on HIGH state for 10 micro seconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  //Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoPin, HIGH);
+  
+  //Calculating the distance
+  distanceUltra= duration*0.034/2;
+  
+  //Prints the distance on the Serial Monitor
+  Serial.print("Distance: ");
+  Serial.println(distanceUltra);
 }
 
 void PixyDetect(){
-  //Use Pixy Camera to determine color
+  //Use Pixy Camera to determine color and change isRed to true or false
+}
+
+void Open(){
+  if(isRed){
+    //move posRed 90 deg clockwise
+    servoRed.write(0);
+    delay(600);
+    redPos = 0;
+  }else{
+    //move posBlue 90 deg counter-clockwise
+    servoBlue.write(180);
+    delay(600);
+    redPos = 180;
+  }
+}
+
+void Close(){
+  //move posRed and posBlue back to origin position (0)
+  servoRed.write(90);
+  servoBlue.write(90);
+  delay(600);
+  //reset redPos and bluePos
+  redPos = 90;
+  bluePos = 90;
 }
 
 void setup() {
-  servo.attach(3);  // attaches the servo on pin 3 to the servo object
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
-  
-  Serial.begin(9600); // Starts the serial communication
+  //Attaches the servo to the servo pin.
+  servo.attach(servoPin);
+  //Sets the trigPin as an Output
+  pinMode(trigPin, OUTPUT);
+  //Sets the echoPin as an Input
+  pinMode(echoPin, INPUT);
+  //Starts the serial communication
+  Serial.begin(9600);
 }
 
 void loop() {
   UltraDetect();
   PixyDetect();
+  
+  if(distanceUltra <= ultraRangeFar && distanceUltra >= ultraRangeNear){
+    Open();
+  }else{
+    Close();
+  }
 }
