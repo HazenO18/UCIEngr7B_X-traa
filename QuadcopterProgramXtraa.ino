@@ -14,10 +14,12 @@
   //Constants
   const int trigPin = 9;
   const int echoPin = 10;
+  const int servoPinRed = 8;
+  const int servoPinBlue = 7;
   const int ultraRangeFar = 150;
   const int ultraRangeNear = 130;
-  int sigRed = 1; //signature one for the pixy will be red
-  int sigBlue = 2; //signature two for the pixy will be blue
+  const int sigRed = 1; //signature one for the pixy will be red
+  const int sigBlue = 2; //signature two for the pixy will be blue
   
   //Non-Constants
   Pixy2 pixy;
@@ -65,12 +67,12 @@ void Open(){
     //move posRed 90 deg clockwise
     servoRed.write(0);
     delay(600);
-    redPos = 0;
+    posRed = 0;
   }else{
     //move posBlue 90 deg counter-clockwise
     servoBlue.write(180);
     delay(600);
-    redPos = 180;
+    posBlue = 180;
   }
 }
 
@@ -80,13 +82,14 @@ void Close(){
   servoBlue.write(90);
   delay(600);
   //reset redPos and bluePos
-  redPos = 90;
-  bluePos = 90;
+  posRed = 90;
+  posBlue = 90;
 }
 
 void setup() {
   //Attaches the servo to the servo pin.
-  servo.attach(servoPin);
+  servoRed.attach(servoPinRed);
+  servoBlue.attach(servoPinBlue);
   //Sets the trigPin as an Output
   pinMode(trigPin, OUTPUT);
   //Sets the echoPin as an Input
