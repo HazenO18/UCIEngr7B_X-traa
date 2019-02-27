@@ -1,7 +1,7 @@
 /*
  * Quadcopter Code for Engr7B Winter Quarter 2019
  * Team Name: X-traa
- * Last edited: 2/13/2019
+ * Last edited: 2/27/2019
  * 
  */
 
@@ -30,6 +30,7 @@
   int distanceUltra = 1000;
   long duration;
   bool isRed = false;
+  bool isBlue = false;
   
   
 void UltraDetect(){
@@ -55,20 +56,24 @@ void UltraDetect(){
 }
 
 void PixyDetect(){
-  //Use Pixy Camera to determine color and change isRed to true or false
+  //Use Pixy Camera to determine color and change isRed and isBlue to true or false
   int i =0;
   pixy.ccc.getBlocks();
-
+  if(pixy.blocks[i].signature == sigRed){
+    isRed = true;
+  }else if(pixy.blocks[i].signature == sigBlue){
+    isBlue = true;
+  }
   
 }
 
 void Open(){
-  if(isRed){
+  if(isRed == true){
     //move posRed 90 deg clockwise
     servoRed.write(0);
     delay(600);
     posRed = 0;
-  }else{
+  }else if(isBlue == true){
     //move posBlue 90 deg counter-clockwise
     servoBlue.write(180);
     delay(600);
@@ -77,7 +82,8 @@ void Open(){
 }
 
 void Close(){
-  //move posRed and posBlue back to origin position (0)
+  //move posRed and
+  posBlue back to origin position (0)
   servoRed.write(90);
   servoBlue.write(90);
   delay(600);
